@@ -1,2 +1,2 @@
-# cai
-Common Application Infrastructure
+# chai
+Common Headers Application Infrastructure
