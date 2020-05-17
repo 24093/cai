@@ -1,21 +1,24 @@
 #pragma once
 
 #include <queue>
-#include <queue>
 #include <functional>
 #include <thread>
 #include <future>
 #include "threading_defs.h"
 
-namespace cai::threading
+namespace chai::threading
 {
     /* consumer */
     template<typename TProduct>
     class consumer
     {
     public:
+        typedef std::function<void(const std::exception&)> errorFn;
+                
         consumer(errorFn onError = [](const std::exception&) {}, size_t queueLimit = std::numeric_limits<int>::max())
-            : _terminated(true), _queueLimit(queueLimit), _errorCallback(std::move(onError)), _workerThread() { }
+            : _terminated(true), _queueLimit(queueLimit), _errorCallback(onError), _workerThread() 
+        {             
+        }
 
         virtual ~consumer()
         {
@@ -121,6 +124,8 @@ namespace cai::threading
     class producer
     {
     public:
+        typedef std::function<void(const std::exception&)> errorFn;
+        
         producer(errorFn onError = [](const std::exception&) { })
             : _terminated(true), _errorCallback(onError)
         {

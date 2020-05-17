@@ -5,9 +5,7 @@
 #include <memory>
 #include <mutex>
 
-#endif
-
-namespace kruss::infrastructure
+namespace chai::events
 {
     template<typename... Args>
     class callback

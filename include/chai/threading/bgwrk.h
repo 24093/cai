@@ -6,13 +6,16 @@
 #include <utility>
 #include "threading_defs.h"
 
-namespace cai::threading
-{
+namespace chai::threading
+{    
     /* background worker */
     template<typename TResult, typename... Args>
     class bgwrk
     {
     public:
+        typedef std::function<void(const TResult)> successFn;
+        typedef std::function<void(const std::exception&)> errorFn;            
+
         bgwrk(successFn onSuccess,
             errorFn onError = [](std::exception&) { },
             successFn onProgress = [](TResult) { }) noexcept
@@ -69,7 +72,11 @@ namespace cai::threading
     template<typename TResult, typename... Args>
     class gbgwrk final : public bgwrk<TResult, Args...>
     {
-    public:
+    public:    
+        typedef std::function<void(const TResult)> successFn;
+        typedef std::function<void(const std::exception&)> errorFn;
+        typedef std::function<TResult(std::function<void(TResult)> progress, Args&& ... args)> workFn;
+            
         gbgwrk(workFn workFunction,
             successFn onSuccess = [](TResult) { },
             errorFn onError = [](const std::exception&) { },
